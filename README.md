@@ -4,7 +4,7 @@
 Приложение для отслеживания вращения головы, в GoPro VR Player, с помощью любого [OpenTrack](https://github.com/opentrack/opentrack/releases/) трекера. 
 
 **Настройка**
-1. Загрузить, установить и настроить OpenTrack (добавить горячую клавишу для сброса центровки, настроить чувствительность, изменить выходной интерфейс на "UDP over network" и задать IP "127.0.0.1" в настройках выходного интерфейса).
+1. Загрузить, установить и настроить OpenTrack (добавить горячую клавишу для сброса центровки, добавить смещение по оси yaw +90 градусов, изменить выходной интерфейс на "UDP over network" и задать IP "127.0.0.1" в настройках выходного интерфейса).
 2. Запустить программу.
 
 ## Razor IMU GoPro VR Player
@@ -37,7 +37,7 @@
 App for tracking the rotation of the head, in Gopro VR Player, with any [OpenTrack](https://github.com/opentrack/opentrack/releases/) tracker. 
 
 **Setup**
-1. Download, install and configure OpenTrack (add a hotkey to reset the alignment, adjust the sensitivity, change the output interface to "UDP over network" and set the IP "127.0.0.1" in the output interface settings).
+1. Download, install and configure OpenTrack (add a hotkey to reset the alignment, add a yaw offset of +90 degrees, change the output interface to "UDP over network" and set the IP "127.0.0.1" in the output interface settings).
 2. Run the program.
 
 ## Razor IMU GoPro VR Player
