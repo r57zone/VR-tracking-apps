@@ -131,7 +131,7 @@ end;
 procedure TMain.CommPortDriverReceiveData(Sender: TObject;
   DataPtr: Pointer; DataSize: Cardinal);
 var
-  i,z: integer;
+  i: integer;
   s: string;
 begin
   s:='';
