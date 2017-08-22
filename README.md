@@ -8,7 +8,9 @@
 2. Запустить программу.
 
 ## Razor IMU GoPro VR Player (inject dll for win32)
-Библиотека внедряющаяся в GoPro VR Player (для 32 битной версии), добавляющая отслеживание вращения головы. Центрировать (сбросить) позицию можно с помощью кнопки "NumPad 5". Необходимо изменить номер com-порта в файле "Setup.ini", переименовать файл "openvr_api.dll" в "_openvr_api.dll" в папке GoPro VR Player и переместить туда файлы "openvr_api.dll" и "Setup.ini".
+Библиотека внедряющаяся в GoPro VR Player (для 32 битной версии), добавляющая отслеживание вращения головы. Центрировать (сбросить) позицию можно с помощью кнопки "NumPad 5".
+
+Необходимо изменить номер com-порта в файле "Setup.ini", переименовать файл "openvr_api.dll" в "_openvr_api.dll" в папке GoPro VR Player и переместить туда файлы "openvr_api.dll" и "Setup.ini".
 
 ## Razor IMU GoPro VR Player
 Приложение для отслеживания вращения головы, в GoPro VR Player, с помощью Arduino Razor IMU трекера ([Arduino](http://ali.pub/1lltzk) + [GY-85](http://ali.pub/1lltk0) + Razor IMU firmware).
@@ -44,7 +46,9 @@ App for tracking the rotation of the head, in Gopro VR Player, with any [OpenTra
 2. Run the program.
 
 ## Razor IMU GoPro VR Player (inject dll for win32)
-The library is injected to GoPro VR Player (for 32-bit version), adding tracking head rotation. You can center (reset) the position using the "NumPad 5" button. It is necessary to change the COM port number in the "Setup.ini" file, rename the file "openvr_api.dll" to "_openvr_api.dll" in the GoPro VR Player folder and move the files "openvr_api.dll" and "Setup.ini" there.
+The library is injected to GoPro VR Player (for 32-bit version), adding tracking head rotation. You can center (reset) the position using the "NumPad 5" button. 
+
+It is necessary to change the COM port number in the "Setup.ini" file, rename the file "openvr_api.dll" to "_openvr_api.dll" in the GoPro VR Player folder and move the files "openvr_api.dll" and "Setup.ini" there.
 
 ## Razor IMU GoPro VR Player
 App for tracking the rotation of the head, in GoPro VR Player, with Arduino Razor IMU tracker ([Arduino](http://ali.pub/1lltzk) + [GY-85](http://ali.pub/1lltk0) + Razor IMU firmware).
