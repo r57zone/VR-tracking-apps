@@ -15,7 +15,6 @@ type
     Label5: TLabel;
     StatusBar: TStatusBar;
     AfterClose: TTimer;
-    ReadBufferTimer: TTimer;
     Label2: TLabel;
     Label4: TLabel;
     Label1: TLabel;
@@ -28,7 +27,6 @@ type
       DataSize: Cardinal);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure AfterCloseTimer(Sender: TObject);
-    procedure ReadBufferTimerTimer(Sender: TObject);
     procedure AfterRunTimer(Sender: TObject);
   private
     procedure WMHotKey(var Msg : TWMHotKey); message WM_HOTKEY;
@@ -53,6 +51,7 @@ var
   FOV: integer;
   Packet: TrackPacket;
   PacketBuffer: string;
+  hTimer: THandle;
 
 implementation
 
@@ -88,6 +87,45 @@ begin
   Result:=fmod(f - f2, 180);
 end;
 
+procedure ReadBuffer(wnd: HWND; uMsg: UINT; idEvent: UINT; dwTime: DWORD); stdcall;
+var
+  s: string;
+begin
+  if Length(PacketBuffer) > 0 then begin
+
+    s:=Copy(PacketBuffer, 1, Pos(#13, PacketBuffer) - 1);
+
+    delete(PacketBuffer, 1, Pos(#13, PacketBuffer) + 1);
+    if Copy(s, 1, 5)='#YPR=' then begin
+      Delete(s, 1, 5);
+      YawBuff:=StrToFloat(StringReplace(copy(s, 1, pos(',', s) - 1), '.', ',', [rfIgnoreCase]));
+
+      Delete(s, 1, pos(',', s));
+      PitchBuff:=StrToFloat(StringReplace(copy(s, 1, pos(',', s) - 1), '.', ',', [rfIgnoreCase]));
+
+      Delete(s, 1, pos(',', s));
+      RollBuff:=StrToFloat(StringReplace(Trim(s), '.', ',', [rfIgnoreCase]));
+
+    end;
+
+    Main.Label4.Caption:=IntToStr(Round(YawBuff)) + ' ' + IntToStr(Round(PitchBuff)) + ' ' + IntToStr(Round(RollBuff));
+    Main.Label5.Caption:=IntToStr(Round(MyOffset(YawBuff, YawOffset))) + ' ' + IntToStr(Round(MyOffset(PitchBuff, PitchOffset))) + ' ' + IntToStr(Round(MyOffset(RollBuff, RollOffset)));
+    Main.Label6.Caption:=IntToStr(Round(YawOffset)) + ' ' + IntToStr(Round(PitchOffset)) + ' ' + IntToStr(Round(RollOffset));
+
+    Packet.Yaw:=MyOffset(RollBuff, RollOffset);
+    Packet.Pitch:=MyOffset(YawBuff, YawOffset) * -1;
+    Packet.roll:=MyOffset(PitchBuff, PitchOffset) * -1;
+
+    Main.IdUDPClient.SendBuffer(Packet, SizeOf(packet));
+  end;
+
+  if GetAsyncKeyState(VK_NUMPAD5) <> 0 then begin
+    YawOffset:=YawBuff;
+    PitchOffset:=PitchBuff;
+    RollOffset:=RollBuff;
+  end;
+end;
+
 procedure TMain.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
@@ -109,12 +147,10 @@ begin
 
   if CommPortDriver.Connect=true then begin
     StatusBar.SimpleText:=' Arduino подключен';
-    ReadBufferTimer.Enabled:=true;
+    hTimer:=SetTimer(0, 0, 0, @ReadBuffer);
   end else StatusBar.SimpleText:=' Arduino не подключен';
 
   IdUDPClient.Active:=true;
-
-  RegisterHotKey(Main.Handle, VK_NumPad5, 0, VK_Numpad5);
 end;
 
 function FloatToJson(num: double): string;
@@ -141,19 +177,14 @@ end;
 
 procedure TMain.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  UnRegisterHotKey(Main.Handle, VK_NumPad5);
   CommPortDriver.Disconnect;
-  ReadBufferTimer.Enabled:=false;
+  KillTimer(0, hTimer);
   IdUDPClient.Active:=false;
 end;
 
 procedure TMain.WMHotKey(var Msg: TWMHotKey);
 begin
-  if Msg.HotKey = VK_NumPad5 then begin
-    YawOffset:=YawBuff;
-    PitchOffset:=PitchBuff;
-    RollOffset:=RollBuff;
-  end;
+
 end;
 
 procedure TMain.AfterCloseTimer(Sender: TObject);
@@ -162,39 +193,6 @@ var
 begin
   WND:=FindWindowExtd('Headset Window');
   if WND = 0 then Close;
-end;
-
-procedure TMain.ReadBufferTimerTimer(Sender: TObject);
-var
-  s: string;
-begin
-  if Length(PacketBuffer) > 0 then begin
-
-    s:=Copy(PacketBuffer, 1, Pos(#13, PacketBuffer) - 1);
-
-    delete(PacketBuffer, 1, Pos(#13, PacketBuffer) + 1);
-    if Copy(s, 1, 5)='#YPR=' then begin
-      Delete(s, 1, 5);
-      YawBuff:=StrToFloat(StringReplace(copy(s, 1, pos(',', s) - 1), '.', ',', [rfIgnoreCase]));
-
-      Delete(s, 1, pos(',', s));
-      PitchBuff:=StrToFloat(StringReplace(copy(s, 1, pos(',', s) - 1), '.', ',', [rfIgnoreCase]));
-
-      Delete(s, 1, pos(',', s));
-      RollBuff:=StrToFloat(StringReplace(Trim(s), '.', ',', [rfIgnoreCase]));
-
-    end;
-
-    Label4.Caption:=IntToStr(Round(YawBuff)) + ' ' + IntToStr(Round(PitchBuff)) + ' ' + IntToStr(Round(RollBuff));
-    Label5.Caption:=IntToStr(Round(MyOffset(YawBuff, YawOffset))) + ' ' + IntToStr(Round(MyOffset(PitchBuff, PitchOffset))) + ' ' + IntToStr(Round(MyOffset(RollBuff, RollOffset)));
-    Label6.Caption:=IntToStr(Round(YawOffset)) + ' ' + IntToStr(Round(PitchOffset)) + ' ' + IntToStr(Round(RollOffset));
-
-    Packet.Yaw:=MyOffset(RollBuff, RollOffset);
-    Packet.Pitch:=MyOffset(YawBuff, YawOffset) * -1;
-    Packet.roll:=MyOffset(PitchBuff, PitchOffset) * -1;
-
-    IdUDPClient.SendBuffer(Packet, SizeOf(packet));
-  end;
 end;
 
 procedure TMain.AfterRunTimer(Sender: TObject);
