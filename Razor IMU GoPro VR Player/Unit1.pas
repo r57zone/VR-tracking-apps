@@ -198,7 +198,7 @@ begin
   WND:=FindWindowExtd('GoPro VR Player');
   if WND <> 0 then begin 
     AfterClose.Enabled:=true;
-    AfterRunTimer.Enabled:=false;
+    AfterRun.Enabled:=false;
    end;
 end;
 
