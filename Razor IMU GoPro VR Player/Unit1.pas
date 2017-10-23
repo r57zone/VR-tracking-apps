@@ -109,14 +109,14 @@ begin
   CommPortDriver.Connect;
 
   if CommPortDriver.Connect=true then begin
-    StatusBar.SimpleText:=' Arduino HT подключен';
+    StatusBar.SimpleText:=' Arduino HT ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­';
     ReadBuffer.Enabled:=true;
-  end else StatusBar.SimpleText:=' Arduino HT не подключен';   
+  end else StatusBar.SimpleText:=' Arduino HT Г­ГҐ ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­';   
 
   if FileExists(PlayerPath) then
     WinExec(PChar(PlayerPath), SW_SHOWNORMAL)
   else
-    ShowMessage('Go Pro VR Player не найден.');
+    ShowMessage('Go Pro VR Player Г­ГҐ Г­Г Г©Г¤ГҐГ­.');
 
   IdUDPClient.Active:=true;
 
@@ -196,7 +196,10 @@ var
   WND: HWND;
 begin
   WND:=FindWindowExtd('GoPro VR Player');
-  if WND <> 0 then AfterClose.Enabled:=true;
+  if WND <> 0 then begin 
+    AfterClose.Enabled:=true;
+    AfterRunTimer.Enabled:=false;
+   end;
 end;
 
 end.
