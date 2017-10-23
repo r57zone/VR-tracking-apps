@@ -196,7 +196,7 @@ begin
   WND:=FindWindowExtd('Headset Window');
   if WND <> 0 then begin
     AfterClose.Enabled:=true;
-    AfterRunTimer.Enabled:=false;
+    AfterRun.Enabled:=false;
   end;
 end;
 
