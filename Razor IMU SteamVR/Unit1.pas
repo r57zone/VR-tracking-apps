@@ -29,7 +29,6 @@ type
     procedure AfterCloseTimer(Sender: TObject);
     procedure AfterRunTimer(Sender: TObject);
   private
-    procedure WMHotKey(var Msg : TWMHotKey); message WM_HOTKEY;
     { Private declarations }
   public
     { Public declarations }
@@ -146,9 +145,9 @@ begin
   CommPortDriver.Connect;
 
   if CommPortDriver.Connect=true then begin
-    StatusBar.SimpleText:=' Arduino подключен';
+    StatusBar.SimpleText:=' Arduino ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­';
     hTimer:=SetTimer(0, 0, 0, @ReadBuffer);
-  end else StatusBar.SimpleText:=' Arduino не подключен';
+  end else StatusBar.SimpleText:=' Arduino Г­ГҐ ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­';
 
   IdUDPClient.Active:=true;
 end;
@@ -182,11 +181,6 @@ begin
   IdUDPClient.Active:=false;
 end;
 
-procedure TMain.WMHotKey(var Msg: TWMHotKey);
-begin
-
-end;
-
 procedure TMain.AfterCloseTimer(Sender: TObject);
 var
   WND: HWND;
@@ -200,7 +194,10 @@ var
   WND: HWND;
 begin
   WND:=FindWindowExtd('Headset Window');
-  if WND <> 0 then AfterClose.Enabled:=true;
+  if WND <> 0 then begin
+    AfterClose.Enabled:=true;
+    AfterRun.Enabled:=false;
+  end;
 end;
 
 end.
